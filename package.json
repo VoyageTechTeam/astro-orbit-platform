@@ -1,0 +1,16 @@
+{
+  "name": "astro-orbit-platform-backend",
+  "version": "1.0.0",
+  "description": "Astro Orbit Platform-Backend API — routing, business logic, and transaction orchestration layers (persistence layer intentionally omitted).",
+  "main": "src/app.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^2.0.1",
+    "uuid": "^9.0.1"
+  }
+}
