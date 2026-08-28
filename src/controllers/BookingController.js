@@ -1,87 +1,77 @@
-const { randomUUID } = require('crypto');
-const { validateBookingPayload } = require('../dtos/BookingPayload');
+const db = require('../config/db');
+const Stripe = require('stripe');
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const { AppError } = require('../errors/AppError');
 
-/**
- * BookingController
- * -----------------------------------------------------------------------
- * Orchestrates incoming reservation flows initiated by travelers.
- * Endpoint: POST /api/v1/bookings
- * -----------------------------------------------------------------------
- */
 class BookingController {
-  constructor({ bookingTransactionManager }) {
-    if (!bookingTransactionManager) {
-      throw new Error('BookingController requires a bookingTransactionManager');
-    }
-    this._transactionManager = bookingTransactionManager;
-  }
-
   /**
-   * Parses incoming reservation parameters (dates, traveler credentials,
-   * property identifiers) and hands execution to the transaction manager.
-   * @param {object} payload — raw BookingPayload
-   * @returns {Promise<object>} committed booking record
+   * Combined handler for creating booking record and Stripe PaymentIntent
    */
-  async executeBookingPostRequest(payload) {
-    const { valid, errors, payload: bookingPayload } = validateBookingPayload(payload);
-    if (!valid) {
-      const error = new Error('Invalid booking payload');
-      error.details = errors;
-      error.statusCode = 422;
-      throw error;
-    }
-
-    const { propertyId, travelerId, startDate, endDate } = bookingPayload;
-    const transactionHandle = await this._transactionManager.openIsolatedTransactionBlock();
-
+  async createBookingAndPaymentIntent(req, res, next) {
     try {
-      const hasOverlap = await this._transactionManager.detectDateOverlap(
-        propertyId,
-        startDate,
-        endDate
+      const { property_id, check_in_date, check_out_date, guests } = req.body;
+      const traveler_id = req.user.user_id;
+
+      // 1. Check for overlapping confirmed or pending bookings
+      const overlapCheck = await db.query(
+        `SELECT booking_id FROM bookings 
+         WHERE property_id = $1 
+           AND status IN ('CONFIRMED', 'PENDING')
+           AND NOT (check_out_date <= $2 OR check_in_date >= $3)`,
+        [property_id, check_in_date, check_out_date]
       );
 
-      if (hasOverlap) {
-        await this._transactionManager.rollbackTransaction(
-          'Date overlap detected for requested property',
-          transactionHandle
-        );
-        const error = new Error('Requested dates overlap an existing reservation');
-        error.statusCode = 409;
-        throw error;
+      if (overlapCheck.rows.length > 0) {
+        throw new AppError('Property is not available for the selected dates', 400);
       }
 
-      const bookingId = randomUUID();
-      const committedBooking = await this._transactionManager.commitTransaction(
-        bookingId,
-        { propertyId, travelerId, startDate, endDate },
-        transactionHandle
+      // 2. Fetch property pricing
+      const propertyQuery = await db.query(
+        `SELECT base_rate FROM property_listings WHERE property_id = $1`,
+        [property_id]
       );
 
-      return committedBooking;
-    } catch (err) {
-      if (!err.statusCode) {
-        await this._transactionManager.rollbackTransaction(err.message, transactionHandle);
+      if (propertyQuery.rows.length === 0) {
+        throw new AppError('Property not found', 404);
       }
-      throw err;
-    }
-  }
 
-  /**
-   * Express handler for POST /api/v1/bookings
-   */
-  handleCreateBooking = async (req, res) => {
-    try {
-      const committedBooking = await this.executeBookingPostRequest(req.body);
-      return res.status(201).json(committedBooking);
-    } catch (err) {
-      const statusCode = err.statusCode || 400;
-      return res.status(statusCode).json({
-        error: err.message,
-        details: err.details,
+      const baseRate = propertyQuery.rows[0].base_rate;
+      const days = Math.ceil(
+        (new Date(check_out_date) - new Date(check_in_date)) / (1000 * 60 * 60 * 24)
+      );
+      const totalAmount = Math.round(baseRate * days * 100); // Amount in cents
+
+      // 3. Create pending booking entry
+      const bookingResult = await db.query(
+        `INSERT INTO bookings (property_id, traveler_id, check_in_date, check_out_date, guests, total_price, status)
+         VALUES ($1, $2, $3, $4, $5, $6, 'PENDING')
+         RETURNING booking_id`,
+        [property_id, traveler_id, check_in_date, check_out_date, guests, baseRate * days]
+      );
+
+      const bookingId = bookingResult.rows[0].booking_id;
+
+      // 4. Create Stripe PaymentIntent with metadata
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: totalAmount,
+        currency: 'usd',
+        metadata: {
+          booking_id: bookingId,
+          traveler_id: traveler_id,
+        },
       });
+
+      res.status(201).json({
+        status: 'success',
+        data: {
+          booking_id: bookingId,
+          clientSecret: paymentIntent.client_secret,
+        },
+      });
+    } catch (err) {
+      next(err);
     }
-  };
+  }
 }
 
-module.exports = BookingController;
+module.exports = new BookingController();
