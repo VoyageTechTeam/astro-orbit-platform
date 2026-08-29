@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const db = require('../db');
+const db = require('../config/db');
 const cloudinary = require('cloudinary').v2;
 
 const initGarbageCollector = () => {
