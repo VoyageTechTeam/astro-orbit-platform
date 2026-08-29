@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const db = require('../config/db');
+const db = require('../db');
 const cloudinary = require('cloudinary').v2;
 
 const initGarbageCollector = () => {
@@ -7,7 +7,7 @@ const initGarbageCollector = () => {
   cron.schedule('0 3 * * *', async () => {
     console.log('[Cron GC] Running orphaned media storage purge job...');
     try {
-      // Find media uploaded > 24h ago that has no associated property_listing or is marked unlinked
+      // Find media uploaded > 24h ago that has no associated property_listing
       const unlinkedMedia = await db.query(
         `SELECT media_id, url, public_id 
          FROM listing_media 
@@ -21,12 +21,10 @@ const initGarbageCollector = () => {
       }
 
       for (const media of unlinkedMedia.rows) {
-        // Purge from Cloudinary using public_id
         if (media.public_id) {
           await cloudinary.uploader.destroy(media.public_id);
         }
 
-        // Remove DB reference row
         await db.query('DELETE FROM listing_media WHERE media_id = $1', [media.media_id]);
         console.log(`[Cron GC] Purged orphaned asset: ${media.media_id}`);
       }
