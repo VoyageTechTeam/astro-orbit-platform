@@ -1,8 +1,9 @@
+// 3_2.jsx
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 export const RequireAuth = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -12,7 +13,7 @@ export const RequireAuth = () => {
 };
 
 export const HostOnlyRoute = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   const userRole = localStorage.getItem('role');
 
   if (!token) {
@@ -27,7 +28,7 @@ export const HostOnlyRoute = () => {
 };
 
 export const TravelerOnlyRoute = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   const userRole = localStorage.getItem('role');
 
   if (!token) {
