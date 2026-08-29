@@ -1,7 +1,8 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);[cite: 61]
-const db = require('../config/db');[cite: 62]
+// webhook.controller.js
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const db = require('./db_2');
 
-const handleStripeWebhook = async (req, res) => {
+const handleStripeWebhook = async (req, res, next) => {
   const sig = req.headers['stripe-signature'];
   let event;
 
@@ -9,41 +10,29 @@ const handleStripeWebhook = async (req, res) => {
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET[cite: 61]
+      process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
-    console.error(`Webhook Error: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  switch (event.type) {
-    case 'payment_intent.succeeded': {
-      const paymentIntent = event.data.object;
-      const { bookingId } = paymentIntent.metadata;
+  if (event.type === 'payment_intent.succeeded') {
+    const paymentIntent = event.data.object;
+    const bookingId = paymentIntent.metadata?.booking_id;
 
-      await db.query(
-        `UPDATE bookings SET status = 'CONFIRMED' WHERE booking_id = $1`,
-        [bookingId]
-      );
-      console.log(`[Stripe Webhook] Confirmed booking: ${bookingId}`);
-      break;
+    if (bookingId) {
+      try {
+        await db.query(
+          `UPDATE bookings SET status = 'CONFIRMED', payment_status = 'PAID', updated_at = NOW() WHERE booking_id = $1`,
+          [bookingId]
+        );
+      } catch (dbErr) {
+        return next(dbErr);
+      }
     }
-    case 'payment_intent.payment_failed': {
-      const paymentIntent = event.data.object;
-      const { bookingId } = paymentIntent.metadata;
-
-      await db.query(
-        `UPDATE bookings SET status = 'CANCELLED' WHERE booking_id = $1`,
-        [bookingId]
-      );
-      console.log(`[Stripe Webhook] Payment failed for booking: ${bookingId}`);
-      break;
-    }
-    default:
-      console.log(`Unhandled event type ${event.type}`);
   }
 
-  res.json({ received: true });
+  res.status(200).json({ received: true });
 };
 
 module.exports = { handleStripeWebhook };
