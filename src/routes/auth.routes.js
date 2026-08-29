@@ -7,11 +7,14 @@ const { AppError, UnauthorizedError } = require('../errors/AppError');
 // Register User
 router.post('/register', async (req, res, next) => {
   try {
-    const { email, password, role = 'TRAVELER', full_name } = req.body;
+    const { email, password, role = 'traveler', full_name } = req.body;
 
     if (!email || !password) {
       throw new AppError('Email and password are required', 400);
     }
+
+    // Normalize role to lowercase for consistent frontend route guards
+    const normalizedRole = role.toLowerCase();
 
     const existing = await db.query('SELECT user_id FROM users WHERE email = $1', [email]);
     if (existing.rows.length > 0) {
@@ -23,7 +26,7 @@ router.post('/register', async (req, res, next) => {
       `INSERT INTO users (email, password_hash, role, full_name)
        VALUES ($1, $2, $3, $4)
        RETURNING user_id, email, role, full_name`,
-      [email, passwordHash, role, full_name]
+      [email, passwordHash, normalizedRole, full_name]
     );
 
     const user = result.rows[0];
