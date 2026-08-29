@@ -1,6 +1,5 @@
-// webhook.controller.js
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const db = require('./db_2');
+const db = require('../db');
 
 const handleStripeWebhook = async (req, res, next) => {
   const sig = req.headers['stripe-signature'];
@@ -13,26 +12,37 @@ const handleStripeWebhook = async (req, res, next) => {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
+    console.error(`Webhook Signature Error: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  if (event.type === 'payment_intent.succeeded') {
-    const paymentIntent = event.data.object;
-    const bookingId = paymentIntent.metadata?.booking_id;
+  try {
+    if (event.type === 'payment_intent.succeeded') {
+      const paymentIntent = event.data.object;
+      const { booking_id } = paymentIntent.metadata || {};
 
-    if (bookingId) {
-      try {
+      if (booking_id) {
         await db.query(
-          `UPDATE bookings SET status = 'CONFIRMED', payment_status = 'PAID', updated_at = NOW() WHERE booking_id = $1`,
-          [bookingId]
+          `UPDATE bookings SET status = 'CONFIRMED', updated_at = NOW() WHERE booking_id = $1`,
+          [booking_id]
         );
-      } catch (dbErr) {
-        return next(dbErr);
+      }
+    } else if (event.type === 'payment_intent.payment_failed') {
+      const paymentIntent = event.data.object;
+      const { booking_id } = paymentIntent.metadata || {};
+
+      if (booking_id) {
+        await db.query(
+          `UPDATE bookings SET status = 'CANCELLED', updated_at = NOW() WHERE booking_id = $1`,
+          [booking_id]
+        );
       }
     }
-  }
 
-  res.status(200).json({ received: true });
+    res.status(200).json({ received: true });
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = { handleStripeWebhook };
