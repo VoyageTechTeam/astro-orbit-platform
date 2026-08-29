@@ -1,49 +1,34 @@
 const express = require('express');
-const multer = require('multer');
-
-const SearchController = require('../controllers/SearchController');
-const BookingController = require('../controllers/BookingController');
-const ListingManagementController = require('../controllers/ListingManagementController');
-
+const authRoutes = require('./auth.routes');
+const ListingManagementController = require('../controllers/ListingManagementController');[cite: 51]
+const BookingController = require('../controllers/BookingController');[cite: 65]
 const ImageProcessingService = require('../services/ImageProcessingService');
-const BookingTransactionManager = require('../services/BookingTransactionManager');
+const BookingTransactionManager = require('../services/BookingTransactionManager');[cite: 63]
 
-/**
- * buildRouter
- * -----------------------------------------------------------------------
- * Wires the Controller & API Gateway layer to the Core Business Logic &
- * Service layer. Dependency instantiation lives here so services can be
- * swapped (e.g. injected persistence-backed gateways) without touching
- * controller code.
- * -----------------------------------------------------------------------
- */
 function buildRouter() {
   const router = express.Router();
-  const upload = multer({ storage: multer.memoryStorage() });
 
-  // --- Service layer instances -------------------------------------------------
+  // Instantiating missing implementations
   const imageProcessingService = new ImageProcessingService();
   const bookingTransactionManager = new BookingTransactionManager();
 
-  // --- Controller instances -----------------------------------------------------
-  const searchController = new SearchController();
-  const bookingController = new BookingController({ bookingTransactionManager });
-  const listingManagementController = new ListingManagementController({
-    imageProcessingService,
-  });
+  const listingController = new ListingManagementController({ imageProcessingService });[cite: 51]
+  const bookingController = new BookingController({ bookingTransactionManager });[cite: 65]
 
-  // --- A. SearchController ------------------------------------------------------
-  router.get('/listings/search', searchController.handleSearch);
+  // Auth Routes
+  router.use('/auth', authRoutes);
 
-  // --- B. BookingController -------------------------------------------------------
-  router.post('/bookings', bookingController.handleCreateBooking);
-
-  // --- C. ListingManagementController ---------------------------------------------
+  // Listing Routes
   router.post(
     '/listings',
-    upload.array('images'),
-    listingManagementController.handleCreateListing
-  );
+    listingController.handleCreateListing
+  );[cite: 51]
+
+  // Booking Routes
+  router.post(
+    '/bookings',
+    bookingController.handleCreateBooking
+  );[cite: 65]
 
   return router;
 }
