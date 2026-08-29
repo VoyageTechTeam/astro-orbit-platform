@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../db');
 const redis = require('../config/redis');
 
 const getHealthStatus = async (req, res) => {
@@ -23,8 +23,12 @@ const getHealthStatus = async (req, res) => {
 
   try {
     // 2. Verify Redis connection
-    const redisPing = await redis.ping();
-    healthCheck.checks.redis = redisPing === 'PONG' ? 'UP' : 'DOWN';
+    if (redis && typeof redis.ping === 'function') {
+      const redisPing = await redis.ping();
+      healthCheck.checks.redis = redisPing === 'PONG' ? 'UP' : 'DOWN';
+    } else {
+      healthCheck.checks.redis = 'DISABLED';
+    }
   } catch (err) {
     healthCheck.checks.redis = 'DOWN';
     healthCheck.status = 'DEGRADED';
