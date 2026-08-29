@@ -1,31 +1,14 @@
+// src/queues/backgroundQueue.js
 const { Queue, Worker } = require('bullmq');
-const cloudinary = require('cloudinary').v2;
-const redisClient = require('../config/redis'); // ensure returns raw ioredis connection
 
-// Configure Cloudinary SDK
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+const connectionOptions = {
+  host: process.env.REDIS_HOST || 'localhost',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD,
+  maxRetriesPerRequest: null // <-- ADD THIS LINE
+};
 
-const mediaQueue = new Queue('media-processing', { connection: redisClient });
-
-const mediaWorker = new Worker(
-  'media-processing',
-  async (job) => {
-    if (job.name === 'processImageVariations') {
-      const { publicId } = job.data;
-      await cloudinary.uploader.explicit(publicId, {
-        type: 'upload',
-        eager: [
-          { width: 800, height: 600, crop: 'fill', format: 'jpg' },
-          { width: 300, height: 300, crop: 'thumb', format: 'webp' },
-        ],
-      });
-    }
-  },
-  { connection: redisClient }
-);
-
-module.exports = { mediaQueue, mediaWorker };
+// Pass it to your Worker / Queue instance
+const backgroundWorker = new Worker('myQueue', async job => {
+  // job handler
+}, { connection: connectionOptions });
