@@ -1,49 +1,62 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const { generateTokens, comparePasswords } = require('../middleware/auth');[cite: 67]
-const db = require('../config/db');[cite: 62]
+const db = require('../db');
+const { hashPassword, comparePasswords, generateTokens } = require('../middleware/auth');
+const { AppError, UnauthorizedError } = require('../errors/AppError');
 
-// POST /api/v1/auth/login
-router.post('/login', async (req, res, next) => {
+// Register User
+router.post('/register', async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role = 'TRAVELER', full_name } = req.body;
+
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+      throw new AppError('Email and password are required', 400);
     }
 
-    const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    const existing = await db.query('SELECT user_id FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) {
+      throw new AppError('User already exists with this email', 400);
+    }
+
+    const passwordHash = await hashPassword(password);
+    const result = await db.query(
+      `INSERT INTO users (email, password_hash, role, full_name)
+       VALUES ($1, $2, $3, $4)
+       RETURNING user_id, email, role, full_name`,
+      [email, passwordHash, role, full_name]
+    );
+
     const user = result.rows[0];
+    const tokens = generateTokens(user);
 
-    if (!user || !(await comparePasswords(password, user.password_hash))) {[cite: 67]
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    const tokens = generateTokens(user);[cite: 67]
-    return res.json({
-      status: 'success',
-      user: { user_id: user.user_id, role: user.role, email: user.email },
-      ...tokens,
-    });
+    res.status(201).json({ status: 'success', data: { user, ...tokens } });
   } catch (err) {
     next(err);
   }
 });
 
-// POST /api/v1/auth/refresh-token
-router.post('/refresh-token', async (req, res, next) => {
+// Login User
+router.post('/login', async (req, res, next) => {
   try {
-    const { refreshToken } = req.body;
-    if (!refreshToken) {
-      return res.status(401).json({ error: 'Refresh token required' });
+    const { email, password } = req.body;
+
+    const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0) {
+      throw new UnauthorizedError('Invalid email or password');
     }
 
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);[cite: 61, 67]
-    const tokens = generateTokens({ user_id: decoded.user_id, role: decoded.role });[cite: 67]
+    const user = result.rows[0];
+    const isValid = await comparePasswords(password, user.password_hash);
+    if (!isValid) {
+      throw new UnauthorizedError('Invalid email or password');
+    }
 
-    return res.json({ accessToken: tokens.accessToken });
+    const tokens = generateTokens(user);
+    delete user.password_hash;
+
+    res.status(200).json({ status: 'success', data: { user, ...tokens } });
   } catch (err) {
-    return res.status(403).json({ error: 'Invalid or expired refresh token' });
+    next(err);
   }
 });
 
