@@ -1,5 +1,7 @@
+// 2_2.jsx
 import React, { useState } from 'react';
-import MediaUpload from './MediaUpload';
+import MediaUpload from './1_2';
+import api from './api_2';
 
 const ListingWizard = () => {
   const [step, setStep] = useState(1);
@@ -9,6 +11,8 @@ const ListingWizard = () => {
     pricePerNight: '',
   });
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,27 +21,42 @@ const ListingWizard = () => {
   const handleNext = () => setStep((prev) => prev + 1);
   const handleBack = () => setStep((prev) => prev - 1);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = new FormData();
-    payload.append('title', formData.title);
-    payload.append('address', formData.address);
-    payload.append('pricePerNight', formData.pricePerNight);
+    setLoading(true);
+    setError(null);
 
-    images.forEach((imgObj) => {
-      payload.append('images', imgObj.file);
-      if (imgObj.isCover) {
-        payload.append('coverImage', imgObj.file.name);
-      }
-    });
+    try {
+      const payload = new FormData();
+      payload.append('title', formData.title);
+      payload.append('address', formData.address);
+      payload.append('pricePerNight', formData.pricePerNight);
 
-    console.log('Sending Payload to Backend:', formData, images);
-    alert('Property listing submitted successfully!');
+      images.forEach((imgObj) => {
+        payload.append('images', imgObj.file);
+        if (imgObj.isCover) {
+          payload.append('coverImage', imgObj.file.name);
+        }
+      });
+
+      await api.post('/listings', payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      alert('Property listing submitted successfully!');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to submit property listing.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px', maxWidth: '600px', margin: '20px auto' }}>
       <h2>Create Listing (Step {step} of 3)</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {step === 1 && (
         <div>
@@ -82,9 +101,13 @@ const ListingWizard = () => {
       )}
 
       <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
-        {step > 1 && <button type="button" onClick={handleBack}>Back</button>}
+        {step > 1 && <button type="button" onClick={handleBack} disabled={loading}>Back</button>}
         {step < 3 && <button type="button" onClick={handleNext}>Next</button>}
-        {step === 3 && <button type="button" onClick={handleSubmit} style={{ background: 'green', color: 'white' }}>Submit</button>}
+        {step === 3 && (
+          <button type="button" onClick={handleSubmit} disabled={loading} style={{ background: 'green', color: 'white' }}>
+            {loading ? 'Submitting...' : 'Submit'}
+          </button>
+        )}
       </div>
     </div>
   );
