@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict 7Ggakb3MPR3fA8YgqMnpZSpvihlFYM4nJ0UfPLGOqgJ5gaVEEqd3mNWZ7dVWlHO
+\restrict rzPbyACR23vfsKgeNuNBExtN7aypBOi391vH6HWoJvjnYqjJpYFnx5x25HHL5e6
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
 
--- Started on 2026-08-28 19:57:55
+-- Started on 2026-08-29 10:00:19
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -30,7 +30,7 @@ CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;
 
 
 --
--- TOC entry 5531 (class 0 OID 0)
+-- TOC entry 5532 (class 0 OID 0)
 -- Dependencies: 3
 -- Name: EXTENSION btree_gist; Type: COMMENT; Schema: -; Owner: 
 --
@@ -47,7 +47,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 
 
 --
--- TOC entry 5532 (class 0 OID 0)
+-- TOC entry 5533 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
 --
@@ -501,7 +501,7 @@ CREATE VIEW public.view_travelers AS
 ALTER VIEW public.view_travelers OWNER TO postgres;
 
 --
--- TOC entry 5514 (class 0 OID 16469)
+-- TOC entry 5515 (class 0 OID 16469)
 -- Dependencies: 224
 -- Data for Name: bookings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -511,7 +511,7 @@ COPY public.bookings (booking_id, property_id, traveler_id, start_date, end_date
 
 
 --
--- TOC entry 5522 (class 0 OID 16802)
+-- TOC entry 5523 (class 0 OID 16802)
 -- Dependencies: 235
 -- Data for Name: concierge_requests; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -521,7 +521,7 @@ COPY public.concierge_requests (request_id, booking_id, service_id, status, requ
 
 
 --
--- TOC entry 5521 (class 0 OID 16790)
+-- TOC entry 5522 (class 0 OID 16790)
 -- Dependencies: 234
 -- Data for Name: concierge_services; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -531,7 +531,7 @@ COPY public.concierge_services (service_id, title, description, price, is_availa
 
 
 --
--- TOC entry 5525 (class 0 OID 17617)
+-- TOC entry 5526 (class 0 OID 17617)
 -- Dependencies: 239
 -- Data for Name: host_payout_accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -541,7 +541,7 @@ COPY public.host_payout_accounts (payout_account_id, host_id, provider, account_
 
 
 --
--- TOC entry 5518 (class 0 OID 16568)
+-- TOC entry 5519 (class 0 OID 16568)
 -- Dependencies: 229
 -- Data for Name: host_profiles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -551,7 +551,7 @@ COPY public.host_profiles (user_id, bank_account_number, routing_number, tax_ide
 
 
 --
--- TOC entry 5520 (class 0 OID 16771)
+-- TOC entry 5521 (class 0 OID 16771)
 -- Dependencies: 233
 -- Data for Name: listing_media; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -561,7 +561,7 @@ COPY public.listing_media (media_id, listing_id, url, caption, display_order, is
 
 
 --
--- TOC entry 5523 (class 0 OID 17558)
+-- TOC entry 5524 (class 0 OID 17558)
 -- Dependencies: 236
 -- Data for Name: listings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -571,7 +571,7 @@ COPY public.listings (listing_id, host_id, title, description, property_type, ci
 
 
 --
--- TOC entry 5513 (class 0 OID 16451)
+-- TOC entry 5514 (class 0 OID 16451)
 -- Dependencies: 223
 -- Data for Name: media_assets; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -581,7 +581,7 @@ COPY public.media_assets (media_id, property_id, file_url, thumbnail_url, upload
 
 
 --
--- TOC entry 5524 (class 0 OID 17603)
+-- TOC entry 5525 (class 0 OID 17603)
 -- Dependencies: 238
 -- Data for Name: promotions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -591,7 +591,7 @@ COPY public.promotions (promo_id, code, discount_percentage, valid_until, max_us
 
 
 --
--- TOC entry 5512 (class 0 OID 16430)
+-- TOC entry 5513 (class 0 OID 16430)
 -- Dependencies: 222
 -- Data for Name: property_listings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -601,7 +601,7 @@ COPY public.property_listings (property_id, host_id, title, description, base_ra
 
 
 --
--- TOC entry 5516 (class 0 OID 16521)
+-- TOC entry 5517 (class 0 OID 16521)
 -- Dependencies: 227
 -- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -611,7 +611,7 @@ COPY public.reviews (review_id, booking_id, traveler_id, property_id, rating, co
 
 
 --
--- TOC entry 5515 (class 0 OID 16494)
+-- TOC entry 5516 (class 0 OID 16494)
 -- Dependencies: 225
 -- Data for Name: tour_guides; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -621,7 +621,7 @@ COPY public.tour_guides (guide_id, name, location_area, rating, hourly_rate, cre
 
 
 --
--- TOC entry 5519 (class 0 OID 16590)
+-- TOC entry 5520 (class 0 OID 16590)
 -- Dependencies: 232
 -- Data for Name: transactions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -631,7 +631,7 @@ COPY public.transactions (transaction_id, booking_id, amount, currency, payment_
 
 
 --
--- TOC entry 5517 (class 0 OID 16555)
+-- TOC entry 5518 (class 0 OID 16555)
 -- Dependencies: 228
 -- Data for Name: traveler_profiles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -641,7 +641,7 @@ COPY public.traveler_profiles (user_id, passport_number, emergency_contact, trav
 
 
 --
--- TOC entry 5511 (class 0 OID 16415)
+-- TOC entry 5512 (class 0 OID 16415)
 -- Dependencies: 221
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -651,7 +651,7 @@ COPY public.users (user_id, name, email, role, created_at) FROM stdin;
 
 
 --
--- TOC entry 5305 (class 2606 OID 16483)
+-- TOC entry 5306 (class 2606 OID 16483)
 -- Name: bookings bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -660,7 +660,7 @@ ALTER TABLE ONLY public.bookings
 
 
 --
--- TOC entry 5334 (class 2606 OID 16813)
+-- TOC entry 5335 (class 2606 OID 16813)
 -- Name: concierge_requests concierge_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -669,7 +669,7 @@ ALTER TABLE ONLY public.concierge_requests
 
 
 --
--- TOC entry 5332 (class 2606 OID 16801)
+-- TOC entry 5333 (class 2606 OID 16801)
 -- Name: concierge_services concierge_services_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -678,7 +678,7 @@ ALTER TABLE ONLY public.concierge_services
 
 
 --
--- TOC entry 5343 (class 2606 OID 17630)
+-- TOC entry 5344 (class 2606 OID 17630)
 -- Name: host_payout_accounts host_payout_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -687,7 +687,7 @@ ALTER TABLE ONLY public.host_payout_accounts
 
 
 --
--- TOC entry 5323 (class 2606 OID 16574)
+-- TOC entry 5324 (class 2606 OID 16574)
 -- Name: host_profiles host_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -696,7 +696,7 @@ ALTER TABLE ONLY public.host_profiles
 
 
 --
--- TOC entry 5330 (class 2606 OID 16784)
+-- TOC entry 5331 (class 2606 OID 16784)
 -- Name: listing_media listing_media_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -705,7 +705,7 @@ ALTER TABLE ONLY public.listing_media
 
 
 --
--- TOC entry 5337 (class 2606 OID 17579)
+-- TOC entry 5338 (class 2606 OID 17579)
 -- Name: listings listings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -714,7 +714,7 @@ ALTER TABLE ONLY public.listings
 
 
 --
--- TOC entry 5303 (class 2606 OID 16463)
+-- TOC entry 5304 (class 2606 OID 16463)
 -- Name: media_assets media_assets_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -723,7 +723,7 @@ ALTER TABLE ONLY public.media_assets
 
 
 --
--- TOC entry 5310 (class 2606 OID 17552)
+-- TOC entry 5311 (class 2606 OID 17552)
 -- Name: bookings prevent_double_booking; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -732,7 +732,7 @@ ALTER TABLE ONLY public.bookings
 
 
 --
--- TOC entry 5339 (class 2606 OID 17616)
+-- TOC entry 5340 (class 2606 OID 17616)
 -- Name: promotions promotions_code_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -741,7 +741,7 @@ ALTER TABLE ONLY public.promotions
 
 
 --
--- TOC entry 5341 (class 2606 OID 17614)
+-- TOC entry 5342 (class 2606 OID 17614)
 -- Name: promotions promotions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -750,7 +750,7 @@ ALTER TABLE ONLY public.promotions
 
 
 --
--- TOC entry 5300 (class 2606 OID 16445)
+-- TOC entry 5301 (class 2606 OID 16445)
 -- Name: property_listings property_listings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -759,7 +759,7 @@ ALTER TABLE ONLY public.property_listings
 
 
 --
--- TOC entry 5316 (class 2606 OID 16537)
+-- TOC entry 5317 (class 2606 OID 16537)
 -- Name: reviews reviews_booking_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -768,7 +768,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- TOC entry 5318 (class 2606 OID 16535)
+-- TOC entry 5319 (class 2606 OID 16535)
 -- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -777,7 +777,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- TOC entry 5313 (class 2606 OID 16509)
+-- TOC entry 5314 (class 2606 OID 16509)
 -- Name: tour_guides tour_guides_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -786,7 +786,7 @@ ALTER TABLE ONLY public.tour_guides
 
 
 --
--- TOC entry 5326 (class 2606 OID 16604)
+-- TOC entry 5327 (class 2606 OID 16604)
 -- Name: transactions transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -795,7 +795,7 @@ ALTER TABLE ONLY public.transactions
 
 
 --
--- TOC entry 5328 (class 2606 OID 16606)
+-- TOC entry 5329 (class 2606 OID 16606)
 -- Name: transactions transactions_transaction_reference_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -804,7 +804,7 @@ ALTER TABLE ONLY public.transactions
 
 
 --
--- TOC entry 5321 (class 2606 OID 16562)
+-- TOC entry 5322 (class 2606 OID 16562)
 -- Name: traveler_profiles traveler_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -831,7 +831,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 5306 (class 1259 OID 16515)
+-- TOC entry 5307 (class 1259 OID 16515)
 -- Name: idx_bookings_date_range; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -839,7 +839,7 @@ CREATE INDEX idx_bookings_date_range ON public.bookings USING btree (property_id
 
 
 --
--- TOC entry 5307 (class 1259 OID 16512)
+-- TOC entry 5308 (class 1259 OID 16512)
 -- Name: idx_bookings_property; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -847,7 +847,7 @@ CREATE INDEX idx_bookings_property ON public.bookings USING btree (property_id);
 
 
 --
--- TOC entry 5308 (class 1259 OID 16513)
+-- TOC entry 5309 (class 1259 OID 16513)
 -- Name: idx_bookings_traveler; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -855,7 +855,7 @@ CREATE INDEX idx_bookings_traveler ON public.bookings USING btree (traveler_id);
 
 
 --
--- TOC entry 5324 (class 1259 OID 16581)
+-- TOC entry 5325 (class 1259 OID 16581)
 -- Name: idx_host_profiles_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -871,7 +871,15 @@ CREATE INDEX idx_listings_location ON public.property_listings USING gist (locat
 
 
 --
--- TOC entry 5335 (class 1259 OID 17597)
+-- TOC entry 5297 (class 1259 OID 17655)
+-- Name: idx_listings_location_gist; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_listings_location_gist ON public.property_listings USING gist (location_coordinates);
+
+
+--
+-- TOC entry 5336 (class 1259 OID 17597)
 -- Name: idx_listings_search; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -879,7 +887,7 @@ CREATE INDEX idx_listings_search ON public.listings USING btree (city, price_per
 
 
 --
--- TOC entry 5301 (class 1259 OID 16511)
+-- TOC entry 5302 (class 1259 OID 16511)
 -- Name: idx_media_assets_property; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -887,7 +895,7 @@ CREATE INDEX idx_media_assets_property ON public.media_assets USING btree (prope
 
 
 --
--- TOC entry 5297 (class 1259 OID 16514)
+-- TOC entry 5298 (class 1259 OID 16514)
 -- Name: idx_properties_location_gist; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -895,7 +903,7 @@ CREATE INDEX idx_properties_location_gist ON public.property_listings USING gist
 
 
 --
--- TOC entry 5298 (class 1259 OID 16510)
+-- TOC entry 5299 (class 1259 OID 16510)
 -- Name: idx_property_listings_host; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -903,7 +911,7 @@ CREATE INDEX idx_property_listings_host ON public.property_listings USING btree 
 
 
 --
--- TOC entry 5314 (class 1259 OID 16553)
+-- TOC entry 5315 (class 1259 OID 16553)
 -- Name: idx_reviews_property; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -911,7 +919,7 @@ CREATE INDEX idx_reviews_property ON public.reviews USING btree (property_id);
 
 
 --
--- TOC entry 5311 (class 1259 OID 16554)
+-- TOC entry 5312 (class 1259 OID 16554)
 -- Name: idx_tour_guides_search; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -919,7 +927,7 @@ CREATE INDEX idx_tour_guides_search ON public.tour_guides USING btree (location_
 
 
 --
--- TOC entry 5319 (class 1259 OID 16580)
+-- TOC entry 5320 (class 1259 OID 16580)
 -- Name: idx_traveler_profiles_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -927,7 +935,7 @@ CREATE INDEX idx_traveler_profiles_id ON public.traveler_profiles USING btree (u
 
 
 --
--- TOC entry 5510 (class 2618 OID 17601)
+-- TOC entry 5511 (class 2618 OID 17601)
 -- Name: listing_summary _RETURN; Type: RULE; Schema: public; Owner: postgres
 --
 
@@ -942,7 +950,7 @@ CREATE OR REPLACE VIEW public.listing_summary AS
 
 
 --
--- TOC entry 5359 (class 2620 OID 17637)
+-- TOC entry 5360 (class 2620 OID 17637)
 -- Name: listings set_timestamp_listings; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -950,7 +958,7 @@ CREATE TRIGGER set_timestamp_listings BEFORE UPDATE ON public.listings FOR EACH 
 
 
 --
--- TOC entry 5355 (class 2606 OID 16814)
+-- TOC entry 5356 (class 2606 OID 16814)
 -- Name: concierge_requests concierge_requests_booking_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -959,7 +967,7 @@ ALTER TABLE ONLY public.concierge_requests
 
 
 --
--- TOC entry 5356 (class 2606 OID 16819)
+-- TOC entry 5357 (class 2606 OID 16819)
 -- Name: concierge_requests concierge_requests_service_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -968,7 +976,7 @@ ALTER TABLE ONLY public.concierge_requests
 
 
 --
--- TOC entry 5344 (class 2606 OID 16446)
+-- TOC entry 5345 (class 2606 OID 16446)
 -- Name: property_listings fk_host; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -977,7 +985,7 @@ ALTER TABLE ONLY public.property_listings
 
 
 --
--- TOC entry 5352 (class 2606 OID 16575)
+-- TOC entry 5353 (class 2606 OID 16575)
 -- Name: host_profiles fk_host_base; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -986,7 +994,7 @@ ALTER TABLE ONLY public.host_profiles
 
 
 --
--- TOC entry 5346 (class 2606 OID 16484)
+-- TOC entry 5347 (class 2606 OID 16484)
 -- Name: bookings fk_property_booking; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -995,7 +1003,7 @@ ALTER TABLE ONLY public.bookings
 
 
 --
--- TOC entry 5345 (class 2606 OID 16464)
+-- TOC entry 5346 (class 2606 OID 16464)
 -- Name: media_assets fk_property_media; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1004,7 +1012,7 @@ ALTER TABLE ONLY public.media_assets
 
 
 --
--- TOC entry 5348 (class 2606 OID 16538)
+-- TOC entry 5349 (class 2606 OID 16538)
 -- Name: reviews fk_review_booking; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1013,7 +1021,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- TOC entry 5349 (class 2606 OID 16548)
+-- TOC entry 5350 (class 2606 OID 16548)
 -- Name: reviews fk_review_property; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1022,7 +1030,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- TOC entry 5350 (class 2606 OID 16543)
+-- TOC entry 5351 (class 2606 OID 16543)
 -- Name: reviews fk_review_traveler; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1031,7 +1039,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- TOC entry 5347 (class 2606 OID 16489)
+-- TOC entry 5348 (class 2606 OID 16489)
 -- Name: bookings fk_traveler; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1040,7 +1048,7 @@ ALTER TABLE ONLY public.bookings
 
 
 --
--- TOC entry 5351 (class 2606 OID 16563)
+-- TOC entry 5352 (class 2606 OID 16563)
 -- Name: traveler_profiles fk_traveler_base; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1049,7 +1057,7 @@ ALTER TABLE ONLY public.traveler_profiles
 
 
 --
--- TOC entry 5358 (class 2606 OID 17631)
+-- TOC entry 5359 (class 2606 OID 17631)
 -- Name: host_payout_accounts host_payout_accounts_host_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1058,7 +1066,7 @@ ALTER TABLE ONLY public.host_payout_accounts
 
 
 --
--- TOC entry 5354 (class 2606 OID 16785)
+-- TOC entry 5355 (class 2606 OID 16785)
 -- Name: listing_media listing_media_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1067,7 +1075,7 @@ ALTER TABLE ONLY public.listing_media
 
 
 --
--- TOC entry 5357 (class 2606 OID 17580)
+-- TOC entry 5358 (class 2606 OID 17580)
 -- Name: listings listings_host_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1076,7 +1084,7 @@ ALTER TABLE ONLY public.listings
 
 
 --
--- TOC entry 5353 (class 2606 OID 16607)
+-- TOC entry 5354 (class 2606 OID 16607)
 -- Name: transactions transactions_booking_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1084,11 +1092,11 @@ ALTER TABLE ONLY public.transactions
     ADD CONSTRAINT transactions_booking_id_fkey FOREIGN KEY (booking_id) REFERENCES public.bookings(booking_id) ON DELETE CASCADE;
 
 
--- Completed on 2026-08-28 19:57:56
+-- Completed on 2026-08-29 10:00:19
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 7Ggakb3MPR3fA8YgqMnpZSpvihlFYM4nJ0UfPLGOqgJ5gaVEEqd3mNWZ7dVWlHO
+\unrestrict rzPbyACR23vfsKgeNuNBExtN7aypBOi391vH6HWoJvjnYqjJpYFnx5x25HHL5e6
 
