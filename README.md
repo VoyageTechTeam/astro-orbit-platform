@@ -1,6 +1,8 @@
 # astro-orbit-platform
 This is a software engineering project prototype for Astro Orbit - it is a hotel booking, property management and travel service professional platform showing a Node.js/Express backend API, frontend components, and a normalized PostgreSQL database schema.
 
+Team Contributions
+
 Safim — Frontend Development
 
 User Interface & Component Architecture: Built responsive layout views for property listings, room availability calendars, host management dashboards, and booking checkout flows.
