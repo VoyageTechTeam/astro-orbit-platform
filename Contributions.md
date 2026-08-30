@@ -18,12 +18,11 @@ Business Logic & WebSockets: Programmed backend event emitters to push real-time
 
 Error Handling & Security: Added request payload sanitization, JWT authorization middleware, and API response formatting across server endpoints.
 
-Daniel (You) — Database Architecture & Optimization
+Daniel (You) —Database Architecture & Live Server Testing Lead
+Complete Live Server Testing & Run Execution: Fully owned end-to-end testing, execution, and stability monitoring of the live server environment on Render. Diagnosed runtime crashes, handled environment-specific execution failures, and resolved live deployment errors (such as MODULE_NOT_FOUND).
 
-Schema Design & DDL Scripting: Authored and maintained the foundational PostgreSQL database structure, encompassing custom ENUM types (booking_status, listing_status_type), custom table relations, and CASCADE deletion constraints.
+Database Design & Architecture: Designed, implemented, and managed the entire database layer, including data schemas, relational models, query optimizations, and database connection pools required for live data persistence.
 
-Data Integrity & Spatial Querying: Built advanced PostgreSQL EXCLUDE constraints using GiST indexes to prevent double bookings, integrated PostGIS spatial data types (point, box) for location-based search, and defined views (listing_summary, view_active_bookings_with_price).
+Cross-Platform & Environment Compatibility: Debugged file resolution mismatches between local Windows development environments and Linux host containers, ensuring seamless case-sensitive module loading during live server runs.
 
-Environment & Security Troubleshooting: Resolved PostgreSQL ownership and SQLSTATE 42501/42710 privilege errors on Neon serverless PostgreSQL, ensuring safe execution without permission conflicts.
-
-Performance Tuning & Triggers: Designed dynamic PL/pgSQL automated trigger functions (update_timestamp) and indexed foreign keys/frequently queried columns (idx_listings_search, idx_bookings_date_range).
+Production Queue & Service Configuration: Configured asynchronous queue processing (BullMQ/Redis) and resolved socket/connection constraints (maxRetriesPerRequest) to ensure system stability under live traffic.
